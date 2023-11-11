@@ -1,13 +1,15 @@
+# 将80个txt文档的文件名与公司名称对应起来
+
+
 import os
 import json
 
 # 指定目录路径
-directory_path = "../bs_challenge_financial_14b_dataset/pdf_txt_file"
+directory_path = "../../bs_challenge_financial_14b_dataset/pdf_txt_file"
 
 
 # 获取目录中所有的txt文件名
 txt_files = [f for f in sorted(os.listdir(directory_path)) if f.endswith('.txt')]
-
 
 # 将每个文件名存为一条json数据
 json_data = []

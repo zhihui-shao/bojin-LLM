@@ -1,8 +1,8 @@
-import json
-import requests
-import time
 
-def baichuan2_post(question):
+import requests
+
+
+def Qwen_post(question):
     
     # 定义API接口的URL
     url = 'http://localhost:8000/v1/chat/completions'
@@ -35,12 +35,13 @@ def baichuan2_post(question):
         response_data = response.json()
         # 处理响应数据
         
-        # print(response_data.get('choices')[0].get('message').get('content'))
-        return response_data
+        answer = response_data.get('choices')[0].get('message').get('content')
+            
+        return answer
     else:
         print(f"请求失败，状态码: {response.status_code}")
         
 question = '你好'
-answer = baichuan2_post(question)
-data = answer.get('choices')[0].get('message').get('content')
-print(data)
+answer = Qwen_post(question)
+
+print(answer)
