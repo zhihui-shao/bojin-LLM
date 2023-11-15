@@ -75,7 +75,7 @@ for obj in datas:
     answer = gpt_post(question)
     print(answer)
 
-    output_file = "A_sql_3.json"  # 每次循环迭代都将结果追加到JSON文件
+    output_file = "A_sql_4.json"  # 每次循环迭代都将结果追加到JSON文件
     with open(output_file, "a", encoding="utf-8") as output:
         json.dump({"a_id": id, "a_question": question, "sql": answer}, output, ensure_ascii=False, indent=4)
         output.write(',' + '\n')
