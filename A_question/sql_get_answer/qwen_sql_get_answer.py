@@ -23,6 +23,7 @@ with open(file_path, "r", encoding="utf-8") as file:
         sql = obj['sql']
         a_answer = []
 
+        # todo bug：答案不止一个
         try:
             cursor.execute(sql)
             data = cursor.fetchone()
