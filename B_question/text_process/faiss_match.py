@@ -116,26 +116,31 @@ for obj in datas:
     keywords = obj["keywords"]
     txt_name = obj['txt_name']       
     print("id:",id)
-    index_name = txt_name.replace(".txt", ".index") 
-    index_path = os.path.join(faiss_folder_path, index_name)
-    # print(index_path)
-    txt_path = os.path.join(txt_folder_path, txt_name)
-    with open(txt_path, 'r', encoding='utf-8') as file:
-        text = file.read()
-        paragraphs = text_splitter.split_text(text)
+    if txt_name == "":
+        print("================================")
+    else:
+        if id > 878:
+            index_name = txt_name.replace(".txt", ".index") 
+            index_path = os.path.join(faiss_folder_path, index_name)
+            # print(index_path)
+            txt_path = os.path.join(txt_folder_path, txt_name)
+            with open(txt_path, 'r', encoding='utf-8') as file:
+                text = file.read()
+                paragraphs = text_splitter.split_text(text)
 
-    faiss_index = faiss_index_load(index_path)
-    sim_data_Index = data_recall(faiss_index, question, 3)
-    # print(sim_data_Index)
-    # print("相似的top3数据是：")
-    paragraph = []
-    for index in sim_data_Index[0]:
-        # print(paragraphs[int(index)])
-        paragraph.append(paragraphs[int(index)])    
-    # print(paragraph)  
-      
-    answer = Qwen_post(question,paragraph).strip()
-    print(answer)
-    jsonl_file_path = '../../answer_template/answer_1124_faiss.jsonl'
-    replace_answer(jsonl_file_path, id, answer)
-        
+            faiss_index = faiss_index_load(index_path)
+            sim_data_Index = data_recall(faiss_index, question, 3)
+            # print(sim_data_Index)
+            # print("相似的top3数据是：")
+            paragraph = []
+            for index in sim_data_Index[0]:
+                # print(paragraphs[int(index)])
+                paragraph.append(paragraphs[int(index)])    
+            # print(paragraph)  
+            
+            answer = Qwen_post(question,paragraph).strip()
+            print(answer)
+            jsonl_file_path = '../../answer_template/answer_1124_faiss.jsonl'
+            replace_answer(jsonl_file_path, id, answer)
+        else:
+            print("该问题已经回答过了")

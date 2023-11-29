@@ -16,7 +16,7 @@
 import json
 import re
 
-file_path_1 = '../get_keywords/B_keywords.json'
+file_path_1 = '../get_keywords/B_keywords_1126.json'
 with open(file_path_1, "r", encoding="utf-8") as file:
     datas = json.load(file)   
 
@@ -63,7 +63,7 @@ for obj in datas:
         else:
             txt_name = ""
                 
-    output_file = "B_kw2txt.json"    # 每次循环迭代都将结果追加到JSON文件
+    output_file = "B_kw2txt_1126.json"    # 每次循环迭代都将结果追加到JSON文件
     with open(output_file, "a", encoding="utf-8") as output:
         json.dump({"b_id":id , "b_question": question,"keywords":keywords,"company_name":c_name[0],"txt_name":txt_name}, output, ensure_ascii=False,indent=4)
         output.write(','+'\n')
