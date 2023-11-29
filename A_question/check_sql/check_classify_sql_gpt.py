@@ -10,7 +10,7 @@ conn = sqlite3.connect(db_path)
 # Create a cursor object using the cursor method
 cursor = conn.cursor()
 
-file_path = '../Qwen_get_sql/A_sql.json'
+file_path = '../gpt_get_sql/A_sql_4.json'
 with open(file_path, "r", encoding="utf-8") as file:
     datas = json.load(file)
 
@@ -18,23 +18,28 @@ with open(file_path, "r", encoding="utf-8") as file:
         id = obj['a_id']
         question = obj['a_question']
         sql = obj['sql']
+        a_answer = []
 
         try:
             cursor.execute(sql)
             data = cursor.fetchone()
             # 执行成功，返回值大于0
-            if data[0] != 0:
-                output_file = "A_Qwen_right_sql_1.json"  # 每次循环迭代都将结果追加到JSON文件，全对
+            if data[0] != 0 and data[0] is not None:
+                a_answer = list(data)
+                print(question)
+                print(a_answer)
+                obj['a_answer'] = a_answer
+                output_file = "A_gpt_right_sql_2.json"  # 每次循环迭代都将结果追加到JSON文件，全对
                 with open(output_file, "a", encoding="utf-8") as output:
-                    json.dump({"a_id": id, "a_question": question, "sql": sql}, output, ensure_ascii=False, indent=4)
+                    json.dump(obj, output, ensure_ascii=False, indent=4)
                     output.write(',' + '\n')
             else:
-                output_file = "A_Qwen_half_sql_1.json"  # 每次循环迭代都将结果追加到JSON文件，可以执行但是结果为0
+                output_file = "A_gpt_half_sql_2.json"  # 每次循环迭代都将结果追加到JSON文件，可以执行但是结果为0
                 with open(output_file, "a", encoding="utf-8") as output:
                     json.dump({"a_id": id, "a_question": question, "sql": sql}, output, ensure_ascii=False, indent=4)
                     output.write(',' + '\n')
         except Exception as e:
-            output_file = "A_Qwen_wrong_sql_1.json"  # 每次循环迭代都将结果追加到JSON文件，无法执行
+            output_file = "A_gpt_wrong_sql_2.json"  # 每次循环迭代都将结果追加到JSON文件，无法执行
             with open(output_file, "a", encoding="utf-8") as output:
                 json.dump({"a_id": id, "a_question": question, "sql": sql}, output, ensure_ascii=False, indent=4)
                 output.write(',' + '\n')
