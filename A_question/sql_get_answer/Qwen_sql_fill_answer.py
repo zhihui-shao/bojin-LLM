@@ -5,10 +5,10 @@ import requests
 
 def Qwen_post(question, template, answer_list):
     # 定义API接口的URL
-    url = 'http://172.31.233.204:8000/v1/chat/completions'
+    url = 'http://172.31.233.206:8000/v1/chat/completions'
 
     content = f'''
-                        你是一位有名的答案填空专家，给你一个题目、回答模板和答案列表，你需要根据题目所要求的数据格式，如小数点位数、百分比、是否取整等，参考示例，将答案列表结合模板，生成通顺且符合题目要求的答案。
+                        你是一位有名的答案填空专家，给你一个题目、回答模板和答案列表，你需要根据题目所要求的数据格式，如小数点位数、百分比、是否取整等，参考示例，将答案列表结合模板，生成语义通顺且符合题目要求的答案。
                         请注意，你所给出的结果必须来自给定的输入，不要有任何额外的输出。
                         
                         示例：
@@ -17,10 +17,10 @@ def Qwen_post(question, template, answer_list):
                         答案列表：["300773",43.99038461538461]
                         在20210105，中信行业分类划分的一级行业为综合金融行业中，涨跌幅最大股票的股票代码是300773，涨跌幅是43.99%。
                         
-                        题目：请问2019年三季度有多少家基金是净申购?它们的净申购份额加起来是多少?请四舍五入保留小数点两位。
-                        回答模板：请问2019年三季度有多少家基金是净申购?它们的净申购份额加起来是()。
-                        答案列表：[829,380472614920.62054]
-                        2019年三季度有829家基金是净申购，它们的净申购份额加起来是380472614920.62。
+                        题目：我想知道股票300819在申万行业分类下的二级行业是什么？用最新的数据。
+                        回答模板：300819在申万行业分类下的二级行业是()。
+                        答案列表：["纺织制造"]
+                        300819在申万行业分类下的二级行业是纺织制造。
                         
                         题目：我想知道安信稳健回报6个月持有期混合A基金在20211231的年报(含半年报)中，其可转债持仓占比最大的是哪个行业？用中信一级行业来统计。
                         回答模板：在20211231的年报(含半年报)中，安信稳健回报6个月持有期混合A基金可转债持仓占比最大的行业是()，用中信一级行业来统计。
@@ -77,7 +77,8 @@ def Qwen_post(question, template, answer_list):
     }
 
     # 发送POST请求
-    response = requests.post(url, json=data, timeout=10 * 60)
+    sess = requests.Session()
+    response = sess.post(url, json=data, timeout=10 * 60)
     # 检查响应状态码
     if response.status_code == 200:
         # 解析响应JSON数据
@@ -94,7 +95,7 @@ template_file_path = '../../answer_template/answer_template.json'
 with open(template_file_path, "r", encoding="utf-8") as file:
     template_datas = json.load(file)
 
-answer_file_path = '../sql_get_answer/A_Qwen_sql_answer.json'
+answer_file_path = '../sql_get_answer/A_sql_answer_1129.json'
 with open(answer_file_path, "r", encoding="utf-8") as file:
     answer_datas = json.load(file)
 
@@ -110,7 +111,7 @@ for obj in answer_datas:
 
     answer = Qwen_post(question, template, answer_list)
 
-    output_file = "A_answer_1122.json"  # 每次循环迭代都将结果追加到JSON文件
+    output_file = "A_answer_1130.json"  # 每次循环迭代都将结果追加到JSON文件
     with open(output_file, "a", encoding="utf-8") as output:
         json.dump({"id": id, "question": question, "answer": answer}, output, ensure_ascii=False, indent=4)
         output.write(',' + '\n')

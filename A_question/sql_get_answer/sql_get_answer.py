@@ -12,7 +12,7 @@ conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 # Construct the SQL query string
-file_path = '../check_sql/A_Qwen_right_sql_2.json'
+file_path = '../sql_finetune/all_right_sql.json'
 
 with open(file_path, "r", encoding="utf-8") as file:
     datas = json.load(file)
@@ -23,12 +23,11 @@ with open(file_path, "r", encoding="utf-8") as file:
         sql = obj['sql']
         a_answer = []
 
-        # todo bug：答案不止一个
         try:
             cursor.execute(sql)
-            data = cursor.fetchone()
+            data = cursor.fetchall()
             a_answer = list(data)
-            output_file = "A_Qwen_sql_answer.json"
+            output_file = "A_sql_answer_1129.json"
             print(a_question)
             print(a_answer)
             obj['a_answer'] = a_answer
