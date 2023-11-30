@@ -63,7 +63,7 @@ source_sql = './all_right_sql.json'
 with open(source_sql, "r", encoding="utf-8") as file:
     source_datas = json.load(file)
 
-for obj in source_datas:
+for obj in source_datas[351:]:
     a_id = obj['a_id']
     question = obj['a_question']
     sql = obj['sql']
