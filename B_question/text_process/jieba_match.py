@@ -4,6 +4,8 @@ from collections import Counter
 import json
 import re
 import requests
+import jieba 
+import string
 
 
 def read_and_split_text(file_path):
@@ -48,7 +50,7 @@ def Qwen_post(question,match_paragraph):
                         要求：仔细阅读文档，找出文档中与问题相关的内容，进行总结，然后给出回答。回答必须和文档相关，保证语义通顺合理。
                         只需要回答用户输入的问题即可，不需要解释原因，也不需要回答其他内容。
                         
-                        示例：
+                        示例模板：
                         用户输入:东莞勤上光电股份有限公司实际控制人是谁？持有多少股份？
                         文档:['一、股份限制流通及自愿锁定承诺\n本次发行前公司总股本 14,050.00 万股，本次拟发行股票 4,683.50 万
                             股，发\n行后总股本18,733.50万股，上述股份均为流通股。\n公司控股股东东莞勤上集团有限公司、实际控制人李旭亮先生和温琦
@@ -67,7 +69,8 @@ def Qwen_post(question,match_paragraph):
                             管理其所持有的烟台杰瑞的股份，也不由烟台杰瑞回购其所持有的股\n份：(1)自烟台杰瑞首次向社会公开发行股票并上市之日 
                             起 36 个月内；(2)自烟台杰瑞\n离职后 6 个月内。']
                         输出:烟台杰瑞石油服务集团股份有限公司获得过“山东省优秀中小企业”、“山东省成长型中小企业”、 2006年度和2007年度“烟台市百强民营企业”荣誉称号。
-                                   
+                           
+                        请按照上述示例模板，      
                         #####
                         用户输入:{question}
                         文档:{match_paragraph}
@@ -110,6 +113,8 @@ def replace_answer(jsonl_file, id_to_replace, new_answer):
 
     with open(jsonl_file, 'w', encoding='utf-8') as file:
         file.writelines(lines)
+  
+  
         
 text_splitter = ChineseRecursiveTextSplitter(
     keep_separator=True,
@@ -118,39 +123,50 @@ text_splitter = ChineseRecursiveTextSplitter(
     chunk_overlap=80
 )
 
-kw_path = '../key2txt/B_kw2txt_1126.json'
+kw_path = '../key2txt/c2txt_1201.json'
 with open(kw_path, "r", encoding="utf-8") as file:
     datas = json.load(file)   
 
 for obj in datas: 
     id = obj['b_id']    
     question = obj['b_question'] 
-    keywords = obj["keywords"]
+    company_name = obj['company_name']
     txt_name = obj['txt_name']       
     print("id:",id)
     if txt_name == "":
         print("================================")
     else:
-        keywords_list = [word.strip() for word in keywords.split("、")]
+        if company_name in question:
+            dealt_question = question.replace(company_name, '')
+        else:
+            dealt_question = question
+        print(question)
+        print(dealt_question)
+        seg_list = jieba.cut(dealt_question, cut_all=False)
+        jieba_list = "/".join(seg_list).split("/")
+        custom_words = ["多少", "哪些", "怎样", "何时", "什么", "是否","哪个","为什么"]
+        # print(jieba_list)
+        keywords_list = [item for item in jieba_list if item not in string.punctuation and len(item) > 1 and item not in custom_words]
         
+
         keywords_list = [word for word in keywords_list if not re.search(r'有限公司', word)]
-        # print(keywords_list)
+        print(keywords_list)
         paragraphs = read_and_split_text(txt_name)
         
         top_paragraphs = get_top_paragraphs(paragraphs, keywords_list, top_n=3)
-        # # 打印结果
+        # 打印结果
         # for paragraph, count in top_paragraphs:
         #     print(f"Paragraph: {paragraph}\nKeyword Count: {count}\n")
-            
+
         match_paragraph = [item[0] for item in top_paragraphs]
         # print(match_paragraph)
         
+    
         answer = Qwen_post(question,match_paragraph).strip()
-            
         print(answer)
         jsonl_file_path = '../../answer_template/answer_1128_kw.jsonl'
         replace_answer(jsonl_file_path, id, answer)
-        
+    
 
             
         
