@@ -91,7 +91,7 @@ answer_file_path = '../sql_get_answer/A_sql_answer_1129.json'
 with open(answer_file_path, "r", encoding="utf-8") as file:
     answer_datas = json.load(file)
 
-for obj in answer_datas[237:]:
+for obj in answer_datas[312:]:
     id = obj['a_id']
     question = obj['a_question']
     answer_list = obj['a_answer']
