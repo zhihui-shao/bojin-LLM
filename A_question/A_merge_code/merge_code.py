@@ -254,13 +254,15 @@ def get_final_answer():
             output.write(',' + '\n')
 
 
-def Qwen_get_sql(a_id, a_question):
+def Qwen_get_answer(a_id, a_question):
     id = a_id
     question = a_question
     sql = Qwen_get_sql_post(question)
     print(sql)
     answer_list = sql_get_answer(sql)
     print(answer_list)
+    final_answer = Qwen_get_answer_post(question, "", answer_list)
+    return final_answer
 
 
 
