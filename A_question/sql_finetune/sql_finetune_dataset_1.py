@@ -62,8 +62,9 @@ source_sql = './all_right_sql.json'
 with open(source_sql, "r", encoding="utf-8") as file:
     source_datas = json.load(file)
 
-for obj in source_datas[145:]:
+for obj in source_datas:
     a_id = obj['a_id']
+    print(a_id)
     question = obj['a_question']
     sql = obj['sql']
     # output_file = "finetune_sql.json"  # 每次循环迭代都将结果追加到JSON文件
@@ -71,14 +72,14 @@ for obj in source_datas[145:]:
     #     json.dump({"question": question, "answer": sql}, output, ensure_ascii=False, indent=4)
     #     output.write(',' + '\n')
 
-    for i in range(0, 3):
+    for i in range(0, 2):
         text = post(question, sql)
         try:
             if "新sql语句：" in text and "新题目：" in text:
                 str_list = text.split("新sql语句：")
                 new_question = str_list[0].strip("新题目：")
                 new_sql = str_list[1]
-                output_file = "finetune_sql_1201_chl_1.json"  # 每次循环迭代都将结果追加到JSON文件
+                output_file = "finetune_sql_1201_chl_2.json"  # 每次循环迭代都将结果追加到JSON文件
                 with open(output_file, "a", encoding="utf-8") as output:
                     json.dump({"question": new_question, "answer": new_sql}, output, ensure_ascii=False, indent=4)
                     output.write(',' + '\n')
@@ -86,11 +87,12 @@ for obj in source_datas[145:]:
                 str_list = text.split("sql语句：")
                 new_question = str_list[0].strip("题目：")
                 new_sql = str_list[1]
-                output_file = "finetune_sql_1201_chl_1.json"  # 每次循环迭代都将结果追加到JSON文件
+                output_file = "finetune_sql_1201_chl_2.json"  # 每次循环迭代都将结果追加到JSON文件
                 with open(output_file, "a", encoding="utf-8") as output:
                     json.dump({"question": new_question, "answer": new_sql}, output, ensure_ascii=False, indent=4)
                     output.write(',' + '\n')
             else:
+                i = i - 1
                 continue
         except Exception as e:
             print(e)

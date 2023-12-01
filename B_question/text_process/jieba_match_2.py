@@ -37,7 +37,7 @@ def get_top_paragraphs(paragraphs, keywords, top_n=3):
 def Qwen_post(question,match_paragraph):
     
     # 定义API接口的URL
-    url = 'http://172.31.233.204:8000/v1/chat/completions'
+    url = 'http://172.31.233.206:8000/v1/chat/completions'
 
     # 定义请求的JSON数据
     data = {
