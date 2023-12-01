@@ -12,10 +12,9 @@ deployment_name = 'lechuang-gpt-35-bak'
 
 def post(question, sql):
     # 定义API接口的URL
-    url = 'http://172.31.233.206:8000/v1/chat/completions'
 
     content = f'''
-                    你是一名专业的Mysql数据库开发人员，你精通Mysql数据库的sql代码编写，现在你需要根据已知的题目和相应的sql语句为例，修改问题给出的条件（如日期等）和对应的sql，来生成新的题目和sql语句。
+                    你是一名专业的Mysql数据库开发人员，你精通Mysql数据库的sql代码编写，现在你需要根据已知的题目和相应的sql语句为例，修改问题给出的条件（如日期，基金股票债券名称，行业分类等）和对应的sql，来生成新的题目和sql语句。
                     请注意，你只需要给出新的题目和sql语句，不需要有任何额外的输出。
                     
                     示例：
@@ -63,22 +62,22 @@ source_sql = './all_right_sql.json'
 with open(source_sql, "r", encoding="utf-8") as file:
     source_datas = json.load(file)
 
-for obj in source_datas[351:]:
+for obj in source_datas:
     a_id = obj['a_id']
     question = obj['a_question']
     sql = obj['sql']
-    output_file = "finetune_sql.json"  # 每次循环迭代都将结果追加到JSON文件
-    with open(output_file, "a", encoding="utf-8") as output:
-        json.dump({"question": question, "answer": sql}, output, ensure_ascii=False, indent=4)
-        output.write(',' + '\n')
+    # output_file = "finetune_sql.json"  # 每次循环迭代都将结果追加到JSON文件
+    # with open(output_file, "a", encoding="utf-8") as output:
+    #     json.dump({"question": question, "answer": sql}, output, ensure_ascii=False, indent=4)
+    #     output.write(',' + '\n')
 
-    for i in range(0, 2):
+    for i in range(0, 4):
         text = post(question, sql)
         if "新sql语句：" in text and "新题目：" in text:
             str_list = text.split("新sql语句：")
             new_question = str_list[0].strip("新题目：")
             new_sql = str_list[1]
-            output_file = "finetune_sql.json"  # 每次循环迭代都将结果追加到JSON文件
+            output_file = "finetune_sql_1201.json"  # 每次循环迭代都将结果追加到JSON文件
             with open(output_file, "a", encoding="utf-8") as output:
                 json.dump({"question": new_question, "answer": new_sql}, output, ensure_ascii=False, indent=4)
                 output.write(',' + '\n')
