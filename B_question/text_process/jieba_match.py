@@ -23,12 +23,10 @@ def count_keywords(paragraph, keywords):
 def get_top_paragraphs(paragraphs, keywords, top_n=3):
     # 创建一个计数器，用于存储每个段落中关键字的出现次数
     paragraph_counts = Counter()
-
     # 遍历每个段落，更新计数器
     for paragraph in paragraphs:
         keyword_count = count_keywords(paragraph, keywords)
         paragraph_counts[paragraph] = keyword_count
-
     # 获取出现关键字最多的前top_n个段落
     top_paragraphs = paragraph_counts.most_common(top_n)
     return top_paragraphs
