@@ -81,7 +81,7 @@ def Qwen_post(question,match_paragraph):
         "temperature": 0.1,
         "top_p": 0,
         "n": 1,
-        "max_tokens": 8192,
+        "max_tokens": 4096,
         "stream": False
     }
     # 发送POST请求
@@ -116,8 +116,8 @@ def replace_answer(jsonl_file, id_to_replace, new_answer):
 text_splitter = ChineseRecursiveTextSplitter(
     keep_separator=True,
     is_separator_regex=True,
-    chunk_size=800,
-    chunk_overlap=80
+    chunk_size=600,      #800
+    chunk_overlap=60     #80  n=3
 )
 
 kw_path = '../key2txt/c2txt_1201.json'
@@ -150,7 +150,7 @@ for obj in datas:
         print(keywords_list)
         paragraphs = read_and_split_text(txt_name)
         
-        top_paragraphs = get_top_paragraphs(paragraphs, keywords_list, top_n=3)
+        top_paragraphs = get_top_paragraphs(paragraphs, keywords_list, top_n=5)
         # 打印结果
         # for paragraph, count in top_paragraphs:
         #     print(f"Paragraph: {paragraph}\nKeyword Count: {count}\n")
@@ -161,7 +161,7 @@ for obj in datas:
     
         answer = Qwen_post(question,match_paragraph).strip()
         print(answer)
-        jsonl_file_path = '../../answer_template/answer_1201_jieba.jsonl'
+        jsonl_file_path = '../../answer_template/answer_1202_jieba.jsonl'
         replace_answer(jsonl_file_path, id, answer)
     
 

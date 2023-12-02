@@ -1,6 +1,7 @@
 import json
 import re
 
+
 file_path = '../bs_challenge_financial_14b_dataset/question.json'
 with open(file_path, "r", encoding="utf-8") as file:
     datas = json.load(file)   
@@ -8,7 +9,7 @@ with open(file_path, "r", encoding="utf-8") as file:
 for obj in datas:
     id = obj["id"]
     question = obj["question"]
-    pattern = r'[0-9]{6,}|小数点|收益率|\d{4}-\d{2}-\d{2}|机构投资者|基金|日波动值' 
+    pattern = r'[0-9]{6,}|小数点|收益率|\d{4}-\d{2}-\d{2}|机构投资者|基金|日波动值|加权平均净资产|' 
     match = re.search(pattern, question)
     if match:
         print(question)

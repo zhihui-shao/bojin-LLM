@@ -37,26 +37,19 @@ def get_top_paragraphs(paragraphs, keywords, top_n=3):
 def Qwen_post(question,match_paragraph):
     
     # 定义API接口的URL
-    url = 'http://172.31.233.206:8000/v1/chat/completions'
+    url = 'http://172.31.233.204:8001/v1/chat/completions'
 
     # 定义请求的JSON数据
     data = {
-        "model": "Tongyi-Finance-14B-Chat",
+        "model": "Qwen-7B-Chat",
         "messages": [
             {
                 "role": 'user',
                 "content": f'''
                         你是文本理解专家，你要根据用户输入的问题，结合文档的内容，给出合理的回答。
-                         
+                        注意：仔细阅读文档，找出文档中与问题相关的内容，进行总结，然后给出回答。回答必须和文档相关，保证语义通顺合理。
+                        
                         示例模板：
-                        用户输入:东莞勤上光电股份有限公司实际控制人是谁？持有多少股份？
-                        文档:['一、股份限制流通及自愿锁定承诺\n本次发行前公司总股本 14,050.00 万股，本次拟发行股票 4,683.50 万
-                            股，发\n行后总股本18,733.50万股，上述股份均为流通股。\n公司控股股东东莞勤上集团有限公司、实际控制人李旭亮先生和温琦
-                            女士、\n东莞市合盈创业投资有限公司、李淑贤、梁金成、莫群积分别承诺：自公司股票', '三、控股股东及实际控制人的简要情况\n本
-                            公司实际控制人为李旭亮先生和温琦女士。李旭亮先生和温琦女士是夫妻\n关系。\n发行人总股本为14,050.00万股，其中李旭亮夫
-                            妇通过勤上集团持有4,851.70\n万股股份，', '况\n公司成立以来，独立从事提供照明产品及照明综合解决方案服务及相关业\n务，不存在经营依赖控股股东等情形。在生产经营方面与主要 ']
-                        输出:东莞勤上光电股份有限公司实际控制人是李旭亮先生和温琦女士，他们持有4,851.70万股股份。
-
                         用户输入:烟台杰瑞石油服务集团股份有限公司获得过哪些荣誉称号？
                         文档:['业务：油田专用设备制造，油田、矿山设备维修改造及配件销售和海上油田钻\n采平台工程作业服务。\n烟台杰
                             瑞成立于 1999 年 12 月，目前是国家科技部认定的“国家火炬计划重点高新\n技术企业”，曾获“山东省优秀中小企业”、“山东 
@@ -67,10 +60,8 @@ def Qwen_post(question,match_paragraph):
                             管理其所持有的烟台杰瑞的股份，也不由烟台杰瑞回购其所持有的股\n份：(1)自烟台杰瑞首次向社会公开发行股票并上市之日 
                             起 36 个月内；(2)自烟台杰瑞\n离职后 6 个月内。']
                         输出:烟台杰瑞石油服务集团股份有限公司获得过“山东省优秀中小企业”、“山东省成长型中小企业”、 2006年度和2007年度“烟台市百强民营企业”荣誉称号。
-                           
+                       
                         请按照上述示例模板，回答用户输入的问题，不需要解释原因，也不需要回答其他内容。
-                        注意：仔细阅读文档，找出文档中与问题相关的内容，进行总结，然后给出回答。回答必须和文档相关，保证语义通顺合理。    
-
                         用户输入:{question}
                         文档:{match_paragraph}
                         输出:    
@@ -116,8 +107,8 @@ def replace_answer(jsonl_file, id_to_replace, new_answer):
 text_splitter = ChineseRecursiveTextSplitter(
     keep_separator=True,
     is_separator_regex=True,
-    chunk_size=800,
-    chunk_overlap=80
+    chunk_size=600,
+    chunk_overlap=60
 )
 
 kw_path = '../key2txt/c2txt_1201.json'
@@ -150,7 +141,7 @@ for obj in datas:
         print(keywords_list)
         paragraphs = read_and_split_text(txt_name)
         
-        top_paragraphs = get_top_paragraphs(paragraphs, keywords_list, top_n=3)
+        top_paragraphs = get_top_paragraphs(paragraphs, keywords_list, top_n=5)
         # 打印结果
         # for paragraph, count in top_paragraphs:
         #     print(f"Paragraph: {paragraph}\nKeyword Count: {count}\n")
@@ -161,7 +152,7 @@ for obj in datas:
     
         answer = Qwen_post(question,match_paragraph).strip()
         print(answer)
-        jsonl_file_path = '../../answer_template/answer_1201_jieba.jsonl'
+        jsonl_file_path = '../../answer_template/answer_1202_jieba_7b.jsonl'
         replace_answer(jsonl_file_path, id, answer)
     
 

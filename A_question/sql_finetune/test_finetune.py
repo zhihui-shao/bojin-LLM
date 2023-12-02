@@ -79,7 +79,7 @@ def Qwen_post(question):
 
     # 定义请求的JSON数据
     data = {
-        "model": "Qwen-7B-Chat",
+        "model": "Tongyi-Finance-14B-Chat",
         "messages": [
             {
                 "role": 'user',
