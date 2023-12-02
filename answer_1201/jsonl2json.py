@@ -15,6 +15,6 @@ def jsonl_to_json(jsonl_file, json_file):
         json.dump(json_data, f, ensure_ascii=False, indent=4)
 
 
-jsonl_file = './answer_1126_kw.jsonl'
-json_file = './answer_1126_kw.json'
+jsonl_file = './answer_1201_jieba.jsonl'
+json_file = './answer_1201_jieba.json'
 jsonl_to_json(jsonl_file, json_file)
