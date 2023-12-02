@@ -62,14 +62,14 @@ source_sql = './all_right_sql.json'
 with open(source_sql, "r", encoding="utf-8") as file:
     source_datas = json.load(file)
 
-for obj in source_datas[145:]:
+for obj in source_datas:
     a_id = obj['a_id']
     question = obj['a_question']
     sql = obj['sql']
-    # output_file = "finetune_sql.json"  # 每次循环迭代都将结果追加到JSON文件
-    # with open(output_file, "a", encoding="utf-8") as output:
-    #     json.dump({"question": question, "answer": sql}, output, ensure_ascii=False, indent=4)
-    #     output.write(',' + '\n')
+    output_file = "finetune_sql.json"  # 每次循环迭代都将结果追加到JSON文件
+    with open(output_file, "a", encoding="utf-8") as output:
+        json.dump({"question": question, "answer": sql}, output, ensure_ascii=False, indent=4)
+        output.write(',' + '\n')
 
     for i in range(0, 3):
         text = post(question, sql)

@@ -4,7 +4,7 @@ from itertools import groupby
 
 
 def adjust():
-    json_file = './finetune_sql_1201.json'
+    json_file = './finetune_sql_1202.json'
     with open(json_file, "r", encoding="utf-8") as file:
         datas = json.load(file)
 
@@ -14,13 +14,13 @@ def adjust():
             obj["question"] = text_list[1].strip().replace('#', '').replace('\n', '')
         obj["question"] = obj["question"].strip().replace('#', '').replace('\n', '')
 
-    output_file = './finetune_sql_1202.json'
+    output_file = 'finetune_sql_1202_1.json'
     with open(output_file, "w", encoding="utf-8") as output:
         json.dump(datas, output, ensure_ascii=False, indent=4)
 
 
 def statis():
-    source_sql = './finetune_sql_1202.json'
+    source_sql = './finetune_sql_1202_1.json'
     with open(source_sql, "r", encoding="utf-8") as file:
         source_datas = json.load(file)
 
