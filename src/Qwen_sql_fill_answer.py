@@ -8,8 +8,7 @@ def Qwen_post(question, answer_list):
     url = 'http://172.31.233.204:8001/v1/chat/completions'
 
     content = f'''
-                        你是一位金融咨询专家，给你一个题目和答案列表，你需要根据题目所要求的数据格式，如小数点位数、百分比、是否取整等，比如，对于12.36489保留3位小数是12.364，对于0.349764四舍五入到2位小数是0.35，对于0.445取百分比为44.5%。
-                        参考示例，将答案列表结合问题，生成语义通顺且符合题目要求的答案。
+                        你是一位金融咨询专家，给你一个题目和答案列表，你需要根据题目所要求的数据格式，如小数点位数、百分比、是否取整等，参考示例，将答案列表结合问题，生成语义通顺且符合题目要求的答案。
                         请注意，你所给出的结果必须结合题目和答案列表，不要有任何额外的输出，不能只是题目与答案的直接拼接，必须是完整的一句话。
 
                         示例：
@@ -65,7 +64,10 @@ def Qwen_post(question, answer_list):
 
 
 def get_final_answer():
-    answer_file_path = '../sql_get_answer/A_sql_answer_1202.json'
+    answer_file_path = '../sql_get_answer/A_sql_answer_1203.json'
+    output_file = "A_final_answer.json"  # 每次循环迭代都将结果追加到JSON文件
+    output_datas = []
+
     with open(answer_file_path, "r", encoding="utf-8") as file:
         answer_datas = json.load(file)
 
@@ -76,10 +78,9 @@ def get_final_answer():
 
         answer = Qwen_post(question, answer_list)
 
-        output_file = "A_answer_1203_1.json"  # 每次循环迭代都将结果追加到JSON文件
-        with open(output_file, "a", encoding="utf-8") as output:
-            json.dump({"id": id, "question": question, "answer": answer}, output, ensure_ascii=False, indent=4)
-            output.write(',' + '\n')
+        output_datas.append({"id": id, "question": question, "answer": answer})
+
+    with open(output_file, "a", encoding="utf-8") as output:
+        json.dump(output_datas, output, ensure_ascii=False, indent=4)
 
 
-get_final_answer()

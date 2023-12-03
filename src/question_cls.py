@@ -2,7 +2,7 @@ import json
 import re
 
 def questions_classify():
-    file_path = '../bs_challenge_financial_14b_dataset/question.json'
+    file_path = './question.json'
     with open(file_path, "r", encoding="utf-8") as file:
         datas = json.load(file)   
     A_questions = []

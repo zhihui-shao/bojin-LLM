@@ -1,7 +1,9 @@
 import json
 
 
-def jsonl_to_json(jsonl_file, json_file):
+def jsonl_to_json():
+    jsonl_file = '../bs_challenge_financial_14b_dataset/question.json'
+    json_file = 'question.json'
     json_data = []
     with open(jsonl_file, 'r', encoding='utf-8') as f:
         for line in f:
@@ -14,7 +16,3 @@ def jsonl_to_json(jsonl_file, json_file):
     with open(json_file, 'w', encoding='utf-8') as f:
         json.dump(json_data, f, ensure_ascii=False, indent=4)
 
-
-jsonl_file = './answer_1201_jieba.jsonl'
-json_file = './answer_1201_jieba.json'
-jsonl_to_json(jsonl_file, json_file)

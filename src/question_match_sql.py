@@ -141,3 +141,4 @@ def get_sql():
             json.dump({"a_id": a_id, "a_question": question, "sql": answer}, output, ensure_ascii=False, indent=4)
             output.write(',' + '\n')
 
+

@@ -41,11 +41,11 @@ def get_top_paragraphs(paragraphs, keywords, top_n=3):
 def Qwen_post(question,match_paragraph):
     
     # 定义API接口的URL
-    url = 'http://172.31.233.204:8000/v1/chat/completions'
+    url = 'http://172.31.233.204:8001/v1/chat/completions'
 
     # 定义请求的JSON数据
     data = {
-        "model": "Tongyi-Finance-14B-Chat",
+        "model": "Qwen-7B-Chat",
         "messages": [
             {
                 "role": 'user',
@@ -151,7 +151,7 @@ def text_answer():
         
         B_final_list.append({"id":id ,"question": question,"answer":answer})
 
-    B_file = "B_final_answer.json"    
+    B_file = "B_final_answer.json"
     with open(B_file, "w", encoding="utf-8") as B_answer:
         json.dump(B_final_list, B_answer, ensure_ascii=False,indent=4)
   
